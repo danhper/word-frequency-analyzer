@@ -41,7 +41,7 @@ object TokenStreamer {
   def apply(reader: Reader): TokenStreamer = {
     val analyzer: Analyzer = new StandardAnalyzer(luceneVersion)
     val source = analyzer.tokenStream("dummyField", reader)
-    val ts = new LengthFilter(Version.LUCENE_47, true, source, 3, Integer.MAX_VALUE);
+    val ts = new LengthFilter(luceneVersion, true, source, 3, Integer.MAX_VALUE);
     ts.reset()
     new TokenStreamer {
       override val tokenStream = ts

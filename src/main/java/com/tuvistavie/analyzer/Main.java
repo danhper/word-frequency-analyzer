@@ -16,6 +16,8 @@ import com.tuvistavie.analyzer.models.WordInfo;
 
 public class Main extends Application {
 
+  private static final int HISTOGRAM_ROWS_COUNT = 15;
+
   @Override
   public void start(Stage stage) {
     stage.setTitle("Bible word occurences");
@@ -27,7 +29,7 @@ public class Main extends Application {
     xAxis.setTickLabelRotation(90);
     yAxis.setLabel("Word");
 
-    List<WordInfo> data = getData(10);
+    List<WordInfo> data = getData(HISTOGRAM_ROWS_COUNT);
     XYChart.Series occurenceSeries = new XYChart.Series();
     occurenceSeries.setName("Words occurence");
     for (int i = data.size() - 1; i >= 0; i--) {
