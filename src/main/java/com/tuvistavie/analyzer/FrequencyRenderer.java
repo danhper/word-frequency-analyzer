@@ -46,15 +46,15 @@ public class FrequencyRenderer extends Application {
     yAxis.setLabel("Word");
 
     List<WordInfo> data = getData(this.getHistogramRowsCount());
-    XYChart.Series occurenceSeries = new XYChart.Series();
-    occurenceSeries.setName("Word occurrences");
+    XYChart.Series occurrenceSeries = new XYChart.Series();
+    occurrenceSeries.setName("Word occurrences");
     for (int i = data.size() - 1; i >= 0; i--) {
       WordInfo wordInfo = data.get(i);
-      occurenceSeries.getData().add(new XYChart.Data(wordInfo.occurenceCount(), wordInfo.word()));
+      occurrenceSeries.getData().add(new XYChart.Data(wordInfo.occurenceCount(), wordInfo.word()));
     }
 
     Scene scene  = new Scene(bc,800,600);
-    bc.getData().add(occurenceSeries);
+    bc.getData().add(occurrenceSeries);
     stage.setScene(scene);
     stage.show();
   }
