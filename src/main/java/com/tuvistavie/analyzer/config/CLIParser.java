@@ -4,8 +4,8 @@ import org.apache.commons.cli.*;
 
 
 public final class CLIParser {
-  private static Options options = getOptions();
-  private static HelpFormatter helpFormatter = new HelpFormatter();
+  private static final Options options = getOptions();
+  private static final HelpFormatter helpFormatter = new HelpFormatter();
 
   private CLIParser() {
 

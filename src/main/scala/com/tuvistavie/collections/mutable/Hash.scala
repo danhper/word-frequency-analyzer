@@ -12,7 +12,7 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
   private var _size: Int = 0
   override def size: Int = _size
 
-  var data = new Array[List[Tuple2[A, B]]](capacity)
+  var data = new Array[List[(A, B)]](capacity)
 
   override def iterator: Iterator[(A, B)] = new HashIterator
 
@@ -23,7 +23,7 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
   protected def grow(): Unit = {
     _capacity <<= 1
     val oldData = data
-    data = new Array[List[Tuple2[A,B]]](capacity)
+    data = new Array[List[(A, B)]](capacity)
     _size = 0
     for (list <- oldData if list != null; (key, value) <- list) {
       update(key, value)
@@ -57,27 +57,24 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
   def update(key: A, value: B): Unit = {
     val h = hashedValue(key)
     data(h) match {
-      case null => {
+      case null =>
         _size += 1
         data.update(h, List((key, value)))
-      }
-      case list => {
+      case list =>
         list.indexWhere { case (k, v) => k == key } match {
-          case -1 if size > capacity / 2 => {
+          case -1 if size > capacity / 2 =>
             grow()
             update(key, value)
-          }
           case -1 => {
             _size += 1
             data.update(h, (key, value) :: list)
           }
           case index => data.update(h, list.updated(index, (key, value)))
         }
-      }
     }
   }
 
-  private def getElem(key: A, list: List[Tuple2[A, B]]): Option[B] = {
+  private def getElem(key: A, list: List[(A, B)]): Option[B] = {
     list.foreach { case (k, v) =>
       if (key == k) return Some(v)
     }
@@ -96,13 +93,13 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
 
     def hasNext: Boolean = iteratedElems < Hash.this.size
 
-    def next: (A, B) = {
+    def next(): (A, B) = {
       iteratedElems += 1
-      if (listIterator != null && listIterator.hasNext) return listIterator.next
+      if (listIterator != null && listIterator.hasNext) return listIterator.next()
       while (i < data.length && (data(i) == null || data(i) == Nil)) i += 1
       listIterator = data(i).iterator
       i += 1
-      listIterator.next
+      listIterator.next()
     }
   }
 }

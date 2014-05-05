@@ -17,7 +17,7 @@ trait TokenStreamer extends Iterable[String] {
   override def iterator: Iterator[String] = {
     new Iterator[String] {
       private var isClosed = false
-      def next: String = {
+      def next(): String = {
         val charTerm = tokenStream.getAttribute(classOf[CharTermAttribute])
         charTerm.toString
       }
@@ -41,7 +41,7 @@ object TokenStreamer {
   def apply(reader: Reader): TokenStreamer = {
     val analyzer: Analyzer = new StandardAnalyzer(luceneVersion)
     val source = analyzer.tokenStream("dummyField", reader)
-    val ts = new LengthFilter(luceneVersion, source, 3, Integer.MAX_VALUE);
+    val ts = new LengthFilter(luceneVersion, source, 3, Integer.MAX_VALUE)
     ts.reset()
     new TokenStreamer {
       override val tokenStream = ts

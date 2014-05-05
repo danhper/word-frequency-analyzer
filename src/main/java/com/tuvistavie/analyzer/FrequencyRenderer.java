@@ -49,11 +49,11 @@ public class FrequencyRenderer extends Application {
     XYChart.Series occurrenceSeries = new XYChart.Series();
     occurrenceSeries.setName("Word occurrences");
 
-    List<XYChart.Data<Number, String>> seriesData = occurrenceSeries.getData();
+    @SuppressWarnings("unchecked") List<XYChart.Data<Number, String>> seriesData = occurrenceSeries.getData();
 
     for (int i = data.size() - 1; i >= 0; i--) {
       WordInfo wordInfo = data.get(i);
-      seriesData.add(new XYChart.Data<>(wordInfo.occurenceCount(), wordInfo.word()));
+      seriesData.add(new XYChart.Data<>(wordInfo.occurrenceCount(), wordInfo.word()));
     }
 
     Scene scene  = new Scene(bc,800,600);
