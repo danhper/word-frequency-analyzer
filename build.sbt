@@ -12,6 +12,14 @@ libraryDependencies ++= Seq(
   "commons-cli" % "commons-cli" % "1.2"
 )
 
+scalacOptions ++= Seq(
+  "-feature"
+)
+
+javacOptions ++= Seq(
+  "-Xlint:unchecked"
+)
+
 assemblySettings
 
 jfxSettings
