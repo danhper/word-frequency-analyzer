@@ -36,18 +36,18 @@ public class FrequencyRenderer extends Application {
 
   @Override
   public void start(Stage stage) {
-    stage.setTitle("Bible word occurences");
+    stage.setTitle("Word occurrences in " + this.getFileName());
     final NumberAxis xAxis = new NumberAxis();
     final CategoryAxis yAxis = new CategoryAxis();
     final BarChart<Number,String> bc = new BarChart<>(xAxis,yAxis);
-    bc.setTitle("Bible word occurences");
-    xAxis.setLabel("Occurences number");
+    bc.setTitle("Word occurrences in " + this.getFileName());
+    xAxis.setLabel("Occurrences number");
     xAxis.setTickLabelRotation(90);
     yAxis.setLabel("Word");
 
     List<WordInfo> data = getData(this.getHistogramRowsCount());
     XYChart.Series occurenceSeries = new XYChart.Series();
-    occurenceSeries.setName("Words occurence");
+    occurenceSeries.setName("Word occurrences");
     for (int i = data.size() - 1; i >= 0; i--) {
       WordInfo wordInfo = data.get(i);
       occurenceSeries.getData().add(new XYChart.Data(wordInfo.occurenceCount(), wordInfo.word()));
