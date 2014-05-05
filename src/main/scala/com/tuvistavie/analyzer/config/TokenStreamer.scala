@@ -1,5 +1,5 @@
 package com.tuvistavie
-package analyzer.util
+package analyzer.config
 
 import org.apache.lucene.util.Version
 import org.apache.lucene.analysis.{Analyzer, Token, TokenStream}

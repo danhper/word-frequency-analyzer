@@ -1,6 +1,6 @@
 package com.tuvistavie
 package analyzer
-package util
+package config
 
 import scala.collection.JavaConversions._
 
