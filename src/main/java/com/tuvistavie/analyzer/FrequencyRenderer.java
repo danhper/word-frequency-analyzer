@@ -36,7 +36,7 @@ public class FrequencyRenderer extends Application {
   @Override
   public void init() throws Exception {
     super.init();
-    setFromArgs();
+    initWithArgs();
     if (!initData()) {
       System.exit(0);
     }
@@ -64,7 +64,7 @@ public class FrequencyRenderer extends Application {
       seriesData.add(new XYChart.Data<>(wordInfo.occurrenceCount(), wordInfo.word()));
     }
 
-    Scene scene  = new Scene(bc,800,600);
+    Scene scene  = new Scene(bc, 800, 600);
 
     bc.getData().add(occurrenceSeries);
     stage.setScene(scene);
@@ -133,7 +133,7 @@ public class FrequencyRenderer extends Application {
     }
   }
 
-  private void setFromArgs() {
+  private void initWithArgs() {
     CommandLine cli = getCli();
     this.setFileName(cli.getOptionValue("filename"));
     if (cli.hasOption("rows-count")) {

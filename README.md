@@ -17,5 +17,5 @@ For development, you will need JDK 8 and sbt.
 # Usage
 
 ```
-java -jar PATH_TO_APP [-n WORD_COUNT] -f FILENAME
+java -jar PATH_TO_APP [-n WORD_COUNT] [-b] [-t TIMES] -f FILENAME
 ```

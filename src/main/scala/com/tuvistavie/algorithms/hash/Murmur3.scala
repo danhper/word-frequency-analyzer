@@ -75,7 +75,7 @@ trait Murmur3 extends HashAlgorithm {
   def hash(string: String): Int = {
     var hash = 1
     string.foreach { c =>
-      hash = 31 * hash + c.intValue
+      hash = 31 * hash + c.toInt
     }
     mixCollHash(hash, string.length)
   }

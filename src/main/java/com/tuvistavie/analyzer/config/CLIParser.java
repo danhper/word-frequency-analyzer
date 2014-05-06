@@ -47,12 +47,22 @@ public final class CLIParser {
             .create("t");
   }
 
+  private static Option getHelpOption() {
+    return OptionBuilder
+            .withDescription("Prints this help")
+            .withLongOpt("help")
+            .hasArg(false)
+            .isRequired(false)
+            .create("h");
+  }
+
   private static Options getOptions() {
     Options options = new Options();
     options.addOption(getFilenameOption());
     options.addOption(getRowsCountOption());
     options.addOption(getUsesBuiltinHashOption());
     options.addOption(getComputeTimeOption());
+    options.addOption(getHelpOption());
     return options;
   }
 
