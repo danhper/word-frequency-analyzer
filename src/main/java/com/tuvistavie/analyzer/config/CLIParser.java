@@ -22,7 +22,6 @@ public final class CLIParser {
 
   private static Option getRowsCountOption() {
     return OptionBuilder
-            .withArgName("n")
             .withDescription("the number of words to display")
             .withLongOpt("rows-count")
             .hasArg(true)
@@ -30,10 +29,20 @@ public final class CLIParser {
             .create("n");
   }
 
+  private static Option getUsesBuiltinHashOption() {
+    return OptionBuilder
+            .withDescription("Use builtin hash class instead of custom implementation")
+            .withLongOpt("builtin-hash")
+            .hasArg(false)
+            .isRequired(false)
+            .create("b");
+  }
+
   private static Options getOptions() {
     Options options = new Options();
     options.addOption(getFilenameOption());
     options.addOption(getRowsCountOption());
+    options.addOption(getUsesBuiltinHashOption());
     return options;
   }
 

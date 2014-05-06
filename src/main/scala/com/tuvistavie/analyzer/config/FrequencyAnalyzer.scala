@@ -6,12 +6,17 @@ import scala.collection.JavaConversions._
 
 import java.io.InputStream
 
-import collections.mutable.Hash
+
+import collections.mutable.{Hash, HashLike, MutableMapWrapper}
 import models.WordInfo
 
-object FrequencyAnalyzer {
-  def getFrequencies(is: InputStream): Hash[String, Int] = {
-    val frequencies: Hash[String, Int] = Hash.empty
+trait FrequencyAnalyzer {
+  type M = HashLike[String, Int]
+
+  def emptyContainer: M
+
+  def getFrequencies(is: InputStream): M = {
+    val frequencies: M = emptyContainer
     val tokenStream = TokenStreamer(is)
 
     tokenStream.foreach { token =>
@@ -30,4 +35,12 @@ object FrequencyAnalyzer {
     val limited = if (limit > 0) sorted take limit else sorted
     limited map { case (k, v) => new WordInfo(k, v) }
   }
+}
+
+object HashFrequencyAnalyzer extends FrequencyAnalyzer {
+  def emptyContainer: M = Hash.empty
+}
+
+object MapFrequencyAnalyzer extends FrequencyAnalyzer {
+  def emptyContainer: M = HashLike.emptyMap
 }

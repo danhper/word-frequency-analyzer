@@ -13,7 +13,8 @@ libraryDependencies ++= Seq(
 )
 
 scalacOptions ++= Seq(
-  "-feature"
+  "-feature",
+  "-language:reflectiveCalls"
 )
 
 javacOptions ++= Seq(

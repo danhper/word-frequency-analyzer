@@ -3,7 +3,7 @@ package collections.mutable
 
 import algorithms.hash.{HashAlgorithm, Murmur3}
 
-trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
+trait Hash[A, B] extends Iterable[(A, B)] with HashLike[A, B] { this: HashAlgorithm =>
   implicit val manifest: Manifest[B]
 
   private var _capacity: Int = 2
@@ -39,7 +39,7 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
     }
   }
 
-  def getOrElse(key: A, default: B): B = get(key) match {
+  def getOrElse[B1 >: B](key: A, default: => B1): B1 = get(key) match {
     case Some(v) => v
     case None => default
   }
@@ -52,9 +52,9 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
     }
   }
 
-  def += (kv: (A, B)): Unit = update(kv._1, kv._2)
+  def += (kv: (A, B)): this.type = update(kv._1, kv._2)
 
-  def update(key: A, value: B): Unit = {
+  def update(key: A, value: B): this.type = {
     val h = hashedValue(key)
     data(h) match {
       case null =>
@@ -72,6 +72,7 @@ trait Hash[A, B] extends Iterable[(A, B)] { this: HashAlgorithm =>
           case index => data.update(h, list.updated(index, (key, value)))
         }
     }
+    this
   }
 
   private def getElem(key: A, list: List[(A, B)]): Option[B] = {

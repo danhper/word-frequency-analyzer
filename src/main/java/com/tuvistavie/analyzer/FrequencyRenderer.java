@@ -1,8 +1,9 @@
 package com.tuvistavie.analyzer;
 
+import com.tuvistavie.analyzer.config.HashFrequencyAnalyzer;
+import com.tuvistavie.analyzer.config.MapFrequencyAnalyzer;
 import com.tuvistavie.analyzer.models.WordInfo;
 import com.tuvistavie.analyzer.config.CLIParser;
-import com.tuvistavie.analyzer.config.FrequencyAnalyzer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -23,6 +24,7 @@ public class FrequencyRenderer extends Application {
 
   private int histogramRowsCount = 15;
   private String fileName;
+  private boolean usesBuiltinHash = false;
 
   public FrequencyRenderer() {
     super();
@@ -45,7 +47,7 @@ public class FrequencyRenderer extends Application {
     xAxis.setTickLabelRotation(90);
     yAxis.setLabel("Word");
 
-    List<WordInfo> data = getData(this.getHistogramRowsCount());
+    List<WordInfo> data = getData();
     XYChart.Series occurrenceSeries = new XYChart.Series();
     occurrenceSeries.setName("Word occurrences");
 
@@ -63,7 +65,15 @@ public class FrequencyRenderer extends Application {
     stage.show();
   }
 
-  private List<WordInfo> getData(int limit) {
+  private List<WordInfo> analyzeFrequencies(InputStream is, int limit) {
+    if (this.usesBuiltinHash()) {
+      return MapFrequencyAnalyzer.getSortedFrequencies(is, limit);
+    } else {
+      return HashFrequencyAnalyzer.getSortedFrequencies(is, limit);
+    }
+  }
+
+  private List<WordInfo> getData() {
     InputStream is = null;
     try {
       is = new FileInputStream(new File(this.getFileName()));
@@ -71,7 +81,7 @@ public class FrequencyRenderer extends Application {
       CLIParser.printHelp();
       System.exit(1);
     }
-    return FrequencyAnalyzer.getSortedFrequencies(is, limit);
+    return analyzeFrequencies(is, this.getHistogramRowsCount());
   }
 
   private CommandLine getCli() {
@@ -92,6 +102,9 @@ public class FrequencyRenderer extends Application {
     if (cli.hasOption("rows-count")) {
       this.setHistogramRowsCount(Integer.parseInt(cli.getOptionValue("rows-count")));
     }
+    if (cli.hasOption("builtin-hash")) {
+      this.setUsesBuiltinHash(true);
+    }
   }
 
   public int getHistogramRowsCount() {
@@ -108,6 +121,14 @@ public class FrequencyRenderer extends Application {
 
   public void setFileName(String fileName) {
     this.fileName = fileName;
+  }
+
+  public boolean usesBuiltinHash() {
+    return usesBuiltinHash;
+  }
+
+  public void setUsesBuiltinHash(boolean usesBuiltinHash) {
+    this.usesBuiltinHash = usesBuiltinHash;
   }
 }
 
