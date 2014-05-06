@@ -38,11 +38,21 @@ public final class CLIParser {
             .create("b");
   }
 
+  private static Option getComputeTimeOption() {
+    return OptionBuilder
+            .withDescription("Runs file analysis n TIMES analysis and stops without rendering")
+            .withLongOpt("benchmark-times")
+            .hasOptionalArgs(1)
+            .isRequired(false)
+            .create("t");
+  }
+
   private static Options getOptions() {
     Options options = new Options();
     options.addOption(getFilenameOption());
     options.addOption(getRowsCountOption());
     options.addOption(getUsesBuiltinHashOption());
+    options.addOption(getComputeTimeOption());
     return options;
   }
 

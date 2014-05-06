@@ -25,6 +25,9 @@ public class FrequencyRenderer extends Application {
   private int histogramRowsCount = 15;
   private String fileName;
   private boolean usesBuiltinHash = false;
+  private List<WordInfo> data;
+  private boolean onlyBenchmark = false;
+  private int benchmarkTimes;
 
   public FrequencyRenderer() {
     super();
@@ -34,6 +37,9 @@ public class FrequencyRenderer extends Application {
   public void init() throws Exception {
     super.init();
     setFromArgs();
+    if (!initData()) {
+      System.exit(0);
+    }
   }
 
   @Override
@@ -73,15 +79,13 @@ public class FrequencyRenderer extends Application {
     }
   }
 
+
   private List<WordInfo> getData() {
-    InputStream is = null;
-    try {
-      is = new FileInputStream(new File(this.getFileName()));
-    } catch (IOException e) {
-      CLIParser.printHelp();
-      System.exit(1);
-    }
-    return analyzeFrequencies(is, this.getHistogramRowsCount());
+    return this.data;
+  }
+
+  private void setData(List<WordInfo> data) {
+    this.data = data;
   }
 
   private CommandLine getCli() {
@@ -96,6 +100,39 @@ public class FrequencyRenderer extends Application {
     }
   }
 
+  private boolean initData() {
+    InputStream is = null;
+    try {
+      if (this.onlyBenchmark) {
+        runBenchmark();
+      } else {
+        is = new FileInputStream(new File(this.getFileName()));
+        this.setData(this.analyzeFrequencies(is, this.getHistogramRowsCount()));
+        return true;
+      }
+    } catch (IOException e) {
+      CLIParser.printHelp();
+      System.exit(1);
+    } finally {
+      try {
+        if (is != null) {
+          is.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    return false;
+  }
+
+  private void runBenchmark() throws IOException {
+    for (int i = 0; i < this.getBenchmarkTimes(); i++) {
+      InputStream is = new FileInputStream(new File(this.getFileName()));
+      analyzeFrequencies(is, this.getHistogramRowsCount());
+      is.close();
+    }
+  }
+
   private void setFromArgs() {
     CommandLine cli = getCli();
     this.setFileName(cli.getOptionValue("filename"));
@@ -104,6 +141,10 @@ public class FrequencyRenderer extends Application {
     }
     if (cli.hasOption("builtin-hash")) {
       this.setUsesBuiltinHash(true);
+    }
+    if (cli.hasOption("benchmark-times")) {
+      this.onlyBenchmark = true;
+      this.setBenchmarkTimes(Integer.parseInt(cli.getOptionValue("benchmark-times", "10")));
     }
   }
 
@@ -129,6 +170,14 @@ public class FrequencyRenderer extends Application {
 
   public void setUsesBuiltinHash(boolean usesBuiltinHash) {
     this.usesBuiltinHash = usesBuiltinHash;
+  }
+
+  public int getBenchmarkTimes() {
+    return benchmarkTimes;
+  }
+
+  public void setBenchmarkTimes(int benchmarkTimes) {
+    this.benchmarkTimes = benchmarkTimes;
   }
 }
 
